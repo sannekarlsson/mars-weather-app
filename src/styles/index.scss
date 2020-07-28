@@ -1,0 +1,295 @@
+$light: #f6f2ef;
+$pale: #ede4de;
+$dark: #4d545f;
+$accent: #978c82;
+
+$border-thin: 1px solid rgba($accent, 0.25);
+
+/* 
+    font-family: 'Work Sans', sans-serif;
+    font-family: 'Abel', sans-serif;
+*/
+
+/* ********************** */
+/*  Site settings */
+/* ********************** */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: $pale;
+    background: repeating-linear-gradient(315deg, 
+        $pale 0, $light 50%, $pale 100%);
+    color: $dark;
+    font-family: 'Work Sans', sans-serif;
+    text-align: center;
+    margin: 0;
+    width: 100vw;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size: 7rem;
+    font-weight: 200;
+    margin: 0;
+}
+
+h2 {
+    font-size: 2.25rem;
+    font-weight: 300;
+    margin: 0;
+}
+
+h3 {
+    font-size: 1.35rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    margin: 0.2em 0;
+}
+
+p {
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+a,
+input[type="radio"],
+label {
+    cursor: pointer;
+}
+
+a {
+    box-shadow: 0 1px 0 currentColor;
+    padding-bottom: 1px;
+    text-decoration: none;
+}
+
+a:hover {
+    box-shadow: 0 2px 0 currentColor;
+}
+
+/* ********************** */
+/*  Layout */
+/* ********************** */
+.container {
+    margin: 0 auto;
+    width: 90%;
+    max-width: 600px;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.vertical-padding {
+    padding: 5em 0;
+}
+
+/* ********************** */
+/*  Font styling */
+/* ********************** */
+.small-heading {
+    color: $accent;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* ********************** */
+/*  Header */
+/* ********************** */
+.header {
+    margin-top: 1.3em;
+}
+
+.hero-heading {
+    margin-top: 0.6em;
+    padding: 0.1em 0.5em;
+}
+
+.hero-heading + .hero-heading {
+    border-left: $border-thin;
+}
+
+/* ********************** */
+/*  Main */
+/* ********************** */
+.temp-avg {
+    margin-top: -0.1em;
+    /* Visually center, since - and ° are assymmetrical */
+    padding-right: 0.16em;
+}
+
+/* The degree symbol is quite large. */
+.degree {
+    font-size: 0.7em;
+    line-height: 1.4;
+    vertical-align: text-top;
+}
+
+.temp-spec-container {
+    border-bottom: $border-thin;
+    border-top: $border-thin;
+    padding: 0.5em 0;
+}
+
+.temp-container {
+    padding: 0.75em;
+    width: 50%;
+}
+
+.temp-container + .temp-container {
+    border-left: $border-thin;
+}
+
+/* ********************** */
+/*  Temp unit toggle */
+/* ********************** */
+.temp-unit-container {
+    margin-top: 3rem;
+}
+
+.temp-unit-toggle {
+    margin: 0;
+    opacity: 0;
+    user-select: none;
+}
+
+.temp-unit-toggle:hover + .temp-unit,
+.temp-unit-toggle:focus + .temp-unit,
+.temp-unit-toggle:checked + .temp-unit {
+    color: $dark;
+}
+
+.temp-unit  {
+    padding: 0.35em 1em;
+}
+
+.temp-unit:last-of-type {
+    border-left: $border-thin;
+    left: -1.7em;
+    position: relative;
+}
+
+/* ********************** */
+/*  Arrow */
+/* ********************** */
+.arrow {
+    width: 1.4rem;
+    margin: 0.5rem 0;
+}
+
+.arrow-path {
+    stroke: $accent;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+/* ********************** */
+/*  Previous sols */
+/* ********************** */
+.table {
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.table-caption {
+    margin-bottom: 2rem;
+}
+
+.table-cell,
+.table-header {
+    border-bottom: $border-thin;
+    padding: 1em 0;
+}
+
+.table-cell {
+    font-family: 'Abel', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.01em;
+}
+
+tbody tr:hover {
+    background: rgba($pale, 0.5);
+}
+
+@media (min-width: 1000px) {
+
+    .previous-sols-container {
+        max-width: 1100px;
+    }
+
+    .table {
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: center;
+    }
+
+    .table-caption {
+        grid-column: 1 / -1;
+    }
+    
+    thead, tbody {
+        display: flex;
+    }
+
+    tr {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .table-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .table-header,
+    .table-cell {
+        padding: 1em 1.5em;
+    }
+
+    .table-header:first-child,
+    .table-cell:first-child {
+        border-top: $border-thin;
+    }
+
+    tbody tr:hover {
+        background: initial;
+    }
+
+    tbody tr:nth-child(odd) {
+        background: $light;
+        background: rgba($pale, 0.5);
+    }
+
+}
+
+/* ********************** */
+/*  Footer -- NASA info */
+/* ********************** */
+.footer {
+    background: $accent;
+    padding: 3em 0;
+}
+
+.nasa-info {
+    color: $light;
+    line-height: 1.5;
+    text-align: justify;
+}
+
+.link {
+    color: $dark;
+}

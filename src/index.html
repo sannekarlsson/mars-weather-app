@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mars weather app</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=Work+Sans:wght@200;300;400" rel="stylesheet">
+    <!-- &display=swap -->
+    <!-- Site style -->
+    <link rel="stylesheet" href="styles/index.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <p class="small-heading">Mars weather</p>
+            <div class="row" data-hero-header>
+                <h3 class="hero-heading">sol <span data-sol-day></span></h3>
+                <h3 class="hero-heading" data-sol-earth-date></h3>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main data-main>
+        <div class="container">
+
+            <section class="temp-avg-container vertical-padding">
+                <p class="small-heading"><span data-sol-season></span></p>
+                <h1 class="temp-avg">
+                    <span data-sol-temp="avg"></span><span class="degree">°</span>
+                </h1>
+            </section>
+
+            <section class="temp-spec-container row">
+                <div class="temp-container">
+                    <p class="small-heading">High</p>
+                    <h2>
+                        <span data-sol-temp="high"></span>°
+                    </h2>
+                </div>
+                <div class="temp-container">
+                    <p class="small-heading">Low</p>
+                    <h2>
+                        <span data-sol-temp="low"></span>°
+                    </h2>
+                </div>
+            </section>
+
+            <div class="temp-unit-container" data-temp-unit>
+                <input class="temp-unit-toggle" type="radio" name="temp-unit" id="celsius" value="celsius" checked>
+                <label class="temp-unit small-heading" for="celsius">°C</label>
+                <input class="temp-unit-toggle" type="radio" name="temp-unit" id="fahrenheit" value="fahrenheit">
+                <label class="temp-unit small-heading" for="fahrenheit">°F</label>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Previous sols -->
+    <section class="vertical-padding" data-previous-sols-container>
+        <div class="container previous-sols-container">
+
+            <svg class="arrow" viewBox="0 0 28 15" width="16px" xmlns="http://www.w3.org/2000/svg">
+                <path class="arrow-path" d="M4 4 L14 11 L24 4" stroke="black" stroke-width="2" stroke-linecap="round"
+                    fill="none" />
+            </svg>
+
+            <!-- Previous sols data -->
+            <table class="table">
+                <caption class="table-caption">
+                    <h3>Previous sols</h3>
+                </caption>
+                <thead>
+                    <tr>
+                        <th class="table-header small-heading">Mars</th>
+                        <th class="table-header small-heading">Earth</th>
+                        <th class="table-header small-heading">Avg</th>
+                        <th class="table-header small-heading">High</th>
+                        <th class="table-header small-heading">Low</th>
+                    </tr>
+                </thead>
+                <tbody data-previous-sols>
+                    <!-- Nasa InSight weather api data of previous sols -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="nasa-info">NASA’s InSight Mars lander takes continuous weather measurements (temperature, wind,
+                pressure) on the surface of Mars at Elysium Planitia, a flat, smooth plain near Mars’ equator.
+                Summaries of these data are available at <a class="link"
+                    href="https://mars.nasa.gov/insight/weather/">NASA
+                    Mars Weather</a>.</p>
+        </div>
+    </footer>
+
+    <!-- Template for previous sols -->
+    <template data-sol-template>
+        <tr>
+            <td class="table-cell">Sol <span data-sol-day></span></td>
+            <td class="table-cell" data-sol-earth-date></td>
+            <td class="table-cell">
+                <span data-sol-temp="avg"></span>°</td>
+            <td class="table-cell">
+                <span data-sol-temp="high"></span>°</td>
+            <td class="table-cell">
+                <span data-sol-temp="low"></span>°</td>
+        </tr>
+    </template>
+
+    <script src="scripts/script.js"></script>
+</body>
+
+</html>
