@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Mars weather app</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Abel&family=Work+Sans:wght@200;300;400" rel="stylesheet">
-    <!-- &display=swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=Work+Sans:wght@200;300;400&display=swap"
+        rel="stylesheet">
     <!-- Site style -->
     <link rel="stylesheet" href="styles/index.css">
 </head>
@@ -20,13 +20,20 @@
             <p class="small-heading">Mars weather</p>
             <div class="row" data-hero-header>
                 <h3 class="hero-heading">sol <span data-sol-day></span></h3>
-                <h3 class="hero-heading" data-sol-earth-date></h3>
+                <h3 class="hero-heading" data-sol-earth-date>day</h3>
             </div>
         </div>
     </header>
 
+    <!-- No script -->
+    <noscript>
+        <div class="container vertical-padding no-script">
+            <p>Hey, you will need JavaScript to view the daily weather on Mars.</p>
+        </div>
+    </noscript>
+
     <!-- Main -->
-    <main data-main>
+    <main class="main" data-main>
         <div class="container">
 
             <section class="temp-avg-container vertical-padding">
@@ -60,6 +67,11 @@
         </div>
     </main>
 
+    <!-- Loader -->
+    <div class="loader container vertical-padding" data-loader>
+        <div class="spinner" data-spinner></div>
+        <p class="loading">Loading weather...</p>
+    </div>
 
     <!-- Previous sols -->
     <section class="vertical-padding" data-previous-sols-container>

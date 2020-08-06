@@ -165,6 +165,10 @@
         var previousSols = document.querySelector('[data-previous-sols]');
         var solTemplate = document.querySelector('[data-sol-template]');
 
+        var showMain = function () {
+            mainElement.classList.add('show');
+        };
+
         var displayDate = function (dateString) {
             return new Date(dateString)
                 .toLocaleDateString(
@@ -238,10 +242,55 @@
             mainElement.innerHTML = noSolsFoundElement;
         };
 
-
         return {
             displayAllSols,
             displayNoSolsFound,
+            showMain,
+        };
+
+    })();
+
+    var loader = (function () {
+
+        'use strict';
+
+        var loader = document.querySelector('[data-loader]');
+        var spinner = document.querySelector('[data-spinner]');
+
+        // Show loader when loading data takes a bit too long
+        var loaderTimeout;
+        var timeoutMs = 500;
+
+        var hideLoader = function () {
+            loader.classList.add('hide');
+            loader.style.display = 'none';
+        };
+
+        var showLoader = function () {
+            loader.style.display = 'block';
+        };
+
+        var stopSpinner = function () {
+            spinner.style.WebkitAnimationPlayState = 'paused';
+            spinner.style.animationPlayState = 'paused';
+        };
+
+        var start = function () {
+            // Start loader when loading data takes a bit too long
+            loaderTimeout = setTimeout(function () {
+                showLoader();
+            }, timeoutMs);
+        };
+
+        var stop = function () {
+            clearTimeout(loaderTimeout);
+            hideLoader();
+            stopSpinner();
+        };
+
+        return {
+            start,
+            stop,
         };
 
     })();
@@ -265,38 +314,67 @@
 
     var getDataFromApi = function () {
 
-        fetch(nasaInsightWeather.API_URL)
-            .then(function (res) {
-                return res.json();
-            })
-            .then(function (data) {
-                displayAndStoreSols(data);
-            })
-            .catch(function (error) {
-                throw error;
-            });
+        return new Promise(function (resolve, reject) {
+
+            fetch(nasaInsightWeather.API_URL)
+                .then(function (res) {
+                    if (!res.ok) {
+                        reject(new Error('Nasa API response not ok.'));
+                    }
+                    return res.json();
+                })
+                .then(function (data) {
+                    resolve(displayAndStoreSols(data));
+                })
+                .catch(function (error) {
+                    reject(error);
+                });
+        })
     };
 
+    var initializeSols = function () {
 
-    /* Initialize sols */
+        return new Promise(function (resolve, reject) {
+
+            try {
+                // Check last api call
+                if (storage.isRecentlyUpdated()) {
+                    // Display stored sols
+                    resolve(appView.displayAllSols());
+
+                } else {
+                    // Call api
+                    resolve(getDataFromApi());
+                }
+
+            } catch (error) {
+                reject(error);
+            }
+        });
+    };
+
+    /* Initialize */
     (function () {
 
-        try {
-            /* Check last api call */
-            if (storage.isRecentlyUpdated()) {
+        // Start loader when loading data takes a bit too long
+        loader.start();
 
-                // Display stored sols
-                appView.displayAllSols();
+        initializeSols()
+            .catch(function (error) {
+                // Neither stored sols nor api went through
+                console.error(error);
 
-            } else {
-                // Call api
-                getDataFromApi();
+                // Display message that no sols were found
+                appView.displayNoSolsFound();
 
-            }
-        } catch (error) {
-            console.error(error);
-            appView.displayNoSolsFound();
-        }
+            }).then(function () {
+
+                // Stop loader
+                loader.stop();
+
+                // Make main visible
+                appView.showMain();
+            });
 
     })();
 

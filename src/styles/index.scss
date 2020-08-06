@@ -123,6 +123,11 @@ a:hover {
 /* ********************** */
 /*  Main */
 /* ********************** */
+.main {
+    /* Hidden before data has been loaded from script */
+    opacity: 0;
+}
+
 .temp-avg {
     margin-top: -0.1em;
     /* Visually center, since - and ° are assymmetrical */
@@ -292,4 +297,62 @@ tbody tr:hover {
 
 .link {
     color: $dark;
+}
+
+/* ********************** */
+/*  Loader */
+/* ********************** */
+
+/* Display hidden elements when data has been loaded */
+.show {
+    opacity: 1;
+    transition: opacity 520ms ease-in-out;
+}
+
+.loader {
+    display: none;
+    position: absolute;
+    top: 16vh;
+    width: 100%;
+    transition: opacity 1s ease-in-out;
+
+    .spinner {
+        $spin-border: 2.5px solid rgba($accent, 0.5);
+        $size: 8vh;
+        width: $size;
+        height: $size;
+        border-top: $spin-border;
+        border-bottom: $spin-border;
+        border-radius: 50%;
+        margin: 0 auto;
+        animation: spin 3s infinite;
+    }
+
+    .loading {
+        color: $accent;
+        padding-top: 2em;
+    }
+}
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
+
+
+.hide {
+    opacity: 0;
+}
+
+
+/* ********************** */
+/*  Noscript */
+/* ********************** */
+.no-script {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
 }
