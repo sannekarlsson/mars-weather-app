@@ -2,7 +2,6 @@
 
     'use strict';
 
-
     var nasaInsightWeather = (function () {
 
         'use strict';

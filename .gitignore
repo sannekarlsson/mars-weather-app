@@ -1,6 +1,7 @@
+# dependencies
+/node_modules
+
+# dev
+/dist
+
 .DS_Store
-
-*.css*
-*.min.*
-
-*copy.*
