@@ -12,6 +12,7 @@
     "build:js": "terser src/js/main.js -m -c -o dist/js/main.js",
     "postbuild": "node include.js",
     "prebuild": "find dist -type f -delete && rm -f index.html && rm -f assets/*",
+    "prewatch": "find dist -type f -delete && run-p build:css build:html build:js -s",
     "serve": "live-server --open=dist --watch=dist --no-css-inject",
     "watch": "run-p serve watch:* -s",
     "watch:assets": "cp -R src/assets dist/",
