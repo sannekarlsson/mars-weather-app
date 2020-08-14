@@ -228,55 +228,58 @@ tbody tr:hover {
     background: rgba($pale, 0.5);
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1100px) {
 
     .previous-sols-container {
-        max-width: 1100px;
+        max-width: 1200px;
     }
 
-    .table {
-        display: grid;
-        grid-template-columns: auto auto;
-        justify-content: center;
-    }
+    @supports (display: grid) {
+        
+        .table {
+            display: grid;
+            grid-template-columns: auto auto;
+            justify-content: center;
+        }
 
-    .table-caption {
-        grid-column: 1 / -1;
-    }
-    
-    thead, tbody {
-        display: flex;
-    }
+        .table-caption {
+            grid-column: 1 / -1;
+        }
+        
+        thead, tbody {
+            display: flex;
+        }
 
-    tr {
-        display: flex;
-        flex-direction: column;
-    }
+        tr {
+            display: flex;
+            flex-direction: column;
+        }
 
-    .table-header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-    }
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
 
-    .table-header,
-    .table-cell {
-        padding: 1em 1.5em;
-    }
+        .table-header,
+        .table-cell {
+            padding: 1em 1.5em;
+        }
 
-    .table-header:first-child,
-    .table-cell:first-child {
-        border-top: $border-thin;
-    }
+        .table-header:first-child,
+        .table-cell:first-child {
+            border-top: $border-thin;
+        }
 
-    tbody tr:hover {
-        background: initial;
-    }
+        tbody tr:hover {
+            background: initial;
+        }
 
-    tbody tr:nth-child(odd) {
-        background: $light;
-        background: rgba($pale, 0.5);
+        tbody tr:nth-child(odd) {
+            background: $light;
+            background: rgba($pale, 0.5);
+        }
     }
 
 }
