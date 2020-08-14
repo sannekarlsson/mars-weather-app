@@ -115,20 +115,28 @@
         </div>
     </footer>
 
-    <!-- Template for previous sols -->
-    <template data-sol-template>
+    <!-- JS template for previous sols -->
+    <script id="js-sol-template" type="text/template">
         <tr>
-            <td class="table-cell">Sol <span data-sol-day></span></td>
-            <td class="table-cell" data-sol-earth-date></td>
+            <td class="table-cell">Sol <span data-sol-day>{{data-sol-day}}</span></td>
+            <td class="table-cell" data-sol-earth-date>{{data-sol-earth-date}}</td>
             <td class="table-cell">
-                <span data-sol-temp="avg"></span>°</td>
+                <span data-sol-temp="avg">{{data-sol-temp="avg"}}</span>°</td>
             <td class="table-cell">
-                <span data-sol-temp="high"></span>°</td>
+                <span data-sol-temp="high">{{data-sol-temp="high"}}</span>°</td>
             <td class="table-cell">
-                <span data-sol-temp="low"></span>°</td>
+                <span data-sol-temp="low">{{data-sol-temp="low"}}</span>°</td>
         </tr>
-    </template>
+    </script>
 
+    <!-- Polyfill -->
+    <script id="polyfill-check">
+        if (!(window.Promise && window.fetch && Element.prototype.closest &&
+            NodeList.prototype.forEach && typeof Object.assign == 'function')) {
+            document.write('<script id="polyfill" src="https://polyfill.io/v3/polyfill.min.js?features=Promise%2Cfetch%2CElement.prototype.closest%2CNodeList.prototype.forEach%2CObject.assign"><\/script>');
+        }</script>
+
+    <!-- Site js -->
     <script src="js/main.js"></script>
 </body>
 

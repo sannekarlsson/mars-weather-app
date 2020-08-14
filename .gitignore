@@ -4,4 +4,11 @@
 # dev
 /dist
 
+# env
+.env
+
+# test
+/tests_output
+*.log
+
 .DS_Store

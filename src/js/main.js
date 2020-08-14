@@ -162,7 +162,7 @@
         var mainElement = document.querySelector('[data-main]');
         var previousSolsContainer = document.querySelector('[data-previous-sols-container]');
         var previousSols = document.querySelector('[data-previous-sols]');
-        var solTemplate = document.querySelector('[data-sol-template]');
+        var solTemplate = document.querySelector('#js-sol-template').innerHTML;
 
         var showMain = function () {
             mainElement.classList.add('show');
@@ -183,29 +183,33 @@
             element.querySelector(selector).innerText = value;
         };
 
-        var displaySol = function (sol, element) {
-
-            setText('[data-sol-day]', sol.day, element);
-            setText('[data-sol-earth-date]', displayDate(sol.earthDate), element);
-            setText('[data-sol-temp="avg"]', temperature.displayTemp(sol.avgTemp), element);
-            setText('[data-sol-temp="high"]', temperature.displayTemp(sol.maxTemp), element);
-            setText('[data-sol-temp="low"]', temperature.displayTemp(sol.minTemp), element);
-
+        var displayMainSol = function (sol) {
+            setText('[data-sol-day]', sol.day);
+            setText('[data-sol-earth-date]', displayDate(sol.earthDate));
+            setText('[data-sol-temp="avg"]', temperature.displayTemp(sol.avgTemp));
+            setText('[data-sol-temp="high"]', temperature.displayTemp(sol.maxTemp));
+            setText('[data-sol-temp="low"]', temperature.displayTemp(sol.minTemp));
+            setText('[data-sol-season]', sol.season);
         };
 
-        var displayMainSol = function (sol) {
-            displaySol(sol);
-            setText('[data-sol-season]', sol.season);
+        // Replace the placeholders in the js template with the sol content
+        var createPreviousSol = function (sol) {
+            return solTemplate
+                .replace('{{data-sol-day}}', sol.day)
+                .replace('{{data-sol-earth-date}}', displayDate(sol.earthDate))
+                .replace('{{data-sol-temp="avg"}}', temperature.displayTemp(sol.avgTemp))
+                .replace('{{data-sol-temp="high"}}', temperature.displayTemp(sol.maxTemp))
+                .replace('{{data-sol-temp="low"}}', temperature.displayTemp(sol.minTemp));
         };
 
         var displayPreviousSols = function (sols) {
 
             sols.forEach(function (sol) {
-                var previousSol = solTemplate.content.cloneNode(true);
+                // Create an html string of the sol
+                var previousSol = createPreviousSol(sol);
 
-                displaySol(sol, previousSol);
-
-                previousSols.appendChild(previousSol);
+                // Add the sol to the previous sols
+                previousSols.insertAdjacentHTML('beforeend', previousSol);
             });
         };
 
