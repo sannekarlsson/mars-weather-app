@@ -8,7 +8,9 @@
 .env
 
 # test
+/tests
 /tests_output
+nightwatch.conf.js
 *.log
 
 .DS_Store

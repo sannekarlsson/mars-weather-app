@@ -1,34 +1,32 @@
 {
   "name": "mars-weather-app",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": "true",
   "author": "Sanne Karlsson",
   "license": "MIT",
+  "homepage": "https://sannekarlsson.github.io/mars-weather-app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sannekarlsson/mars-weather-app"
+  },
   "scripts": {
-    "build": "run-p build:* -s",
-    "build:assets": "cp src/assets/* assets/",
-    "build:css": "sass src/scss/main.scss --style=compressed | postcss -o dist/css/main.css",
-    "build:html": "posthtml",
-    "build:js": "terser src/js/main.js -m -c -o dist/js/main.js",
+    "build": "run-p html js scss assets",
+    "prebuild": "rm -rf dist/* && mkdir dist/js",
     "postbuild": "node include.js",
-    "posttest:local:ie": "kill $(lsof -ti :8083) && echo Port closed",
-    "prebuild": "find dist -type f -delete && rm -f index.html && rm -f assets/*",
-    "pretest": "npm run build",
-    "prewatch": "find dist -type f -delete && run-p build:css build:html build:js -s",
-    "serve": "live-server --open=dist --watch=dist --no-css-inject",
-    "test": "run-p test:local:*",
-    "test:local:ie": "node tests/local.runner.js -e local.ie -g local",
-    "test:local:server": "live-server --port=8083 --no-browser --watch=index.html",
-    "watch": "run-p serve watch:* -s",
-    "watch:assets": "cp -R src/assets dist/",
-    "watch:html": "onchange src/index.html -- npm run build:html",
-    "watch:js": "onchange src/js/* -- terser src/js/main.js -o dist/js/main.js",
-    "watch:scss": "onchange src/scss/* -- npm run build:css"
+    "assets": "cp -R src/assets/ dist/assets",
+    "html": "posthtml",
+    "js": "terser src/js/main.js -o dist/js/main.js",
+    "scss": "sass src/scss/main.scss -s compressed | postcss -o dist/css/main.css",
+    "dev": "run-p watch-* serve",
+    "predev": "npm run build",
+    "serve": "browser-sync dist -w -b 'google chrome'",
+    "watch-assets": "onchange 'src/assets' -- npm run assets",
+    "watch-html": "onchange src/index.html -- npm run html",
+    "watch-js": "onchange src/js/* -- npm run js",
+    "watch-scss": "onchange src/scss/* -- npm run scss"
   },
   "browserslist": [
-    "> 0.5%",
-    "last 2 versions",
-    "Firefox ESR",
+    "> 0.25%",
     "not dead",
     "iOS > 10"
   ],
@@ -47,12 +45,10 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
-    "browserstack-local": "^1.4.5",
+    "browser-sync": "^2.27.5",
     "htmlnano": "^1.0.0",
-    "live-server": "^1.2.1",
-    "nightwatch": "^1.7.8",
     "npm-run-all": "^4.1.5",
-    "onchange": "^7.0.2",
+    "onchange": "^7.1.0",
     "postcss-cli": "^7.1.1",
     "posthtml-cli": "^0.6.0",
     "sass": "^1.26.10",
@@ -60,8 +56,5 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0"
-  },
-  "engines": {
-    "node": "12.0.0"
   }
 }

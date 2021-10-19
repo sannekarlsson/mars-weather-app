@@ -2,14 +2,14 @@
 
     'use strict';
 
-    var nasaInsightWeather = (function () {
+    const nasaInsightWeather = (function () {
 
         'use strict';
 
-        var API_KEY = 'DEMO_KEY';
-        var API_URL = 'https://api.nasa.gov/insight_weather/?api_key=' + API_KEY + '&feedtype=json&ver=1.0';
+        const API_KEY = 'DEMO_KEY';
+        const API_URL = 'https://api.nasa.gov/insight_weather/?api_key=' + API_KEY + '&feedtype=json&ver=1.0';
 
-        var extractSolData = function (sol) {
+        function extractSolData(sol) {
             return {
                 avgTemp: sol.AT.av,
                 maxTemp: sol.AT.mx,
@@ -17,22 +17,26 @@
                 earthDate: sol.First_UTC,
                 season: sol.Season,
             };
-        };
+        }
 
-        var extractAllSols = function (data) {
+        function extractAllSols(data) {
 
             // Keys to sol objects 
             // -- reverse to place most recent in front
-            var solKeys = data.sol_keys.reverse();
+            const solKeys = data.sol_keys.reverse();
+
+            if (solKeys.length < 1) {
+                throw new Error('Empty sol data from API call.');
+            }
 
             // Set up the sol data to use 
             return solKeys.map(function (solDay) {
 
-                var solData = extractSolData(data[solDay])
+                const solData = extractSolData(data[solDay])
 
                 return Object.assign({ day: solDay }, solData);
             });
-        };
+        }
 
         return {
             API_URL,
@@ -42,15 +46,15 @@
 
     })();
 
-    var storage = (function () {
+    const storage = (function () {
 
         'use strict';
 
-        var storageKey = 'mars_data';
+        const storageKey = 'mars_data';
         /* 43200000 = 12h */
-        var apiTimeout = 43200000;
+        const apiTimeout = 43200000;
 
-        var storeSolData = function (data) {
+        function storeSolData(data) {
 
             try {
                 localStorage.setItem(storageKey, JSON.stringify(data));
@@ -59,25 +63,25 @@
                 return;
             }
 
-        };
+        }
 
-        var getSolData = function () {
-            var data = localStorage.getItem(storageKey);
+        function getSolData() {
+            const data = localStorage.getItem(storageKey);
 
             return JSON.parse(data);
-        };
+        }
 
 
-        var getSols = function () {
+        function getSols() {
 
             try {
                 return getSolData().sols;
             } catch (error) {
                 throw new Error('No sol data stored.');
             }
-        };
+        }
 
-        var isRecentlyUpdated = function () {
+        function isRecentlyUpdated() {
 
             try {
                 var timestamp = getSolData().timestamp;
@@ -86,7 +90,7 @@
             }
 
             return (Date.now() - timestamp < apiTimeout);
-        };
+        }
 
 
         return {
@@ -97,43 +101,43 @@
 
     })();
 
-    var temperature = (function () {
+    const temperature = (function () {
 
         'use strict';
 
-        var celsiusButton = document.querySelector('#celsius');
+        const celsiusButton = document.querySelector('#celsius');
 
 
-        var celsiusToFahrenheit = function (celsius) {
+        function celsiusToFahrenheit(celsius) {
             return Math.round(9 / 5 * celsius + 32);
-        };
+        }
 
-        var fahrenheitToCelsius = function (fahrenheit) {
+        function fahrenheitToCelsius(fahrenheit) {
             return Math.round(5 / 9 * (fahrenheit - 32));
-        };
+        }
 
-        var isCelsius = function () {
+        function isCelsius() {
             return celsiusButton.checked;
-        };
+        }
 
-        var displayTemp = function (number) {
+        function displayTemp(number) {
             if (!isCelsius()) {
                 return celsiusToFahrenheit(number);
             }
             return Math.round(number);
-        };
+        }
 
-        var updateTemperatures = function (conversionFunction) {
+        function updateTemperatures(conversionFunction) {
             /* Not a live Node list, therefore select them here */
-            var solTemperatures = document.querySelectorAll('[data-sol-temp]');
+            const solTemperatures = document.querySelectorAll('[data-sol-temp]');
 
             solTemperatures.forEach(function (solTemp) {
                 solTemp.innerText = conversionFunction(solTemp.textContent * 1);
             });
 
-        };
+        }
 
-        var toggleUnit = function (event) {
+        function toggleUnit(event) {
 
             if (!event.target.closest('[data-temp-unit]')) {
                 return;
@@ -144,7 +148,7 @@
             } else {
                 updateTemperatures(celsiusToFahrenheit);
             }
-        };
+        }
 
         document.addEventListener('change', toggleUnit, false);
 
@@ -154,66 +158,69 @@
 
     })();
 
-    var appView = (function () {
+    const appView = (function () {
 
         'use strict';
 
-        var heroHeader = document.querySelector('[data-hero-header]');
-        var mainElement = document.querySelector('[data-main]');
-        var previousSolsContainer = document.querySelector('[data-previous-sols-container]');
-        var previousSols = document.querySelector('[data-previous-sols]');
-        var solTemplate = document.querySelector('#js-sol-template').innerHTML;
+        const heroHeader = document.querySelector('[data-hero-header]');
+        const mainElement = document.querySelector('[data-main]');
+        const previousSolsContainer = document.querySelector('[data-previous-sols-container]');
+        const previousSols = document.querySelector('[data-previous-sols]');
 
-        var showMain = function () {
+        function showMain() {
             mainElement.classList.add('show');
-        };
+        }
 
-        var displayDate = function (dateString) {
+        function displayDate(dateString) {
             return new Date(dateString)
                 .toLocaleDateString(
                     'en-GB', {
                     day: 'numeric',
                     month: 'long'
                 });
-        };
+        }
 
-        var setText = function (selector, value, element) {
-            element = element ? element : document;
+        function element(selector) {
+            return document.querySelector(selector);
+        }
 
-            element.querySelector(selector).innerText = value;
-        };
+        function displayMainSol(sol) {
+            element('[data-sol-day]').innerText = sol.day;
+            element('[data-sol-earth-date]').innerText = displayDate(sol.earthDate);
+            element('[data-sol-temp="avg"]').innerText = temperature.displayTemp(sol.avgTemp);
+            element('[data-sol-temp="high"]').innerText = temperature.displayTemp(sol.maxTemp);
+            element('[data-sol-temp="low"]').innerText = temperature.displayTemp(sol.minTemp);
+            element('[data-sol-season]').innerText = sol.season;
+        }
 
-        var displayMainSol = function (sol) {
-            setText('[data-sol-day]', sol.day);
-            setText('[data-sol-earth-date]', displayDate(sol.earthDate));
-            setText('[data-sol-temp="avg"]', temperature.displayTemp(sol.avgTemp));
-            setText('[data-sol-temp="high"]', temperature.displayTemp(sol.maxTemp));
-            setText('[data-sol-temp="low"]', temperature.displayTemp(sol.minTemp));
-            setText('[data-sol-season]', sol.season);
-        };
+        // Html template for previous sols
+        function createPreviousSol(sol) {
+            return (
+                '<tr>' +
+                '<td class="table-cell">Sol <span data-sol-day>' + sol.day + '</span></td>' +
+                '<td class="table-cell" data-sol-earth-date>' + displayDate(sol.earthDate) + '</td>' +
+                '<td class="table-cell">' +
+                '<span data-sol-temp="avg">' + temperature.displayTemp(sol.avgTemp) + '</span>°</td>' +
+                '<td class="table-cell">' +
+                '<span data-sol-temp="high">' + temperature.displayTemp(sol.maxTemp) + '</span>°</td>' +
+                '<td class="table-cell">' +
+                '<span data-sol-temp="low">' + temperature.displayTemp(sol.minTemp) + '</span>°</td>' +
+                '</tr>'
+            );
+        }
 
-        // Replace the placeholders in the js template with the sol content
-        var createPreviousSol = function (sol) {
-            return solTemplate
-                .replace('{{data-sol-day}}', sol.day)
-                .replace('{{data-sol-earth-date}}', displayDate(sol.earthDate))
-                .replace('{{data-sol-temp="avg"}}', temperature.displayTemp(sol.avgTemp))
-                .replace('{{data-sol-temp="high"}}', temperature.displayTemp(sol.maxTemp))
-                .replace('{{data-sol-temp="low"}}', temperature.displayTemp(sol.minTemp));
-        };
-
-        var displayPreviousSols = function (sols) {
+        function displayPreviousSols(sols) {
 
             sols.forEach(function (sol) {
                 // Create an html string of the sol
-                var previousSol = createPreviousSol(sol);
+                const previousSol = createPreviousSol(sol);
 
                 // Add the sol to the previous sols
                 previousSols.insertAdjacentHTML('beforeend', previousSol);
             });
-        };
+        }
 
-        var displayAllSols = function (sols) {
+        function displayAllSols(sols) {
 
             if (!sols) {
                 try {
@@ -225,25 +232,25 @@
 
             displayMainSol(sols[0]);
             displayPreviousSols(sols);
-        };
+        }
 
-        var displayNoSolsFound = function () {
+        function displayNoSolsFound() {
 
-            var message1 = 'Sorry, could not find any sols at the moment.';
-            var message2 = 'Please try again later.';
+            const message1 = 'Sorry, could not find any sols at the moment.';
+            const message2 = 'Please try again later.';
 
             // Empty content
             heroHeader.outerHTML = '';
             previousSolsContainer.outerHTML = '';
 
-            var noSolsFoundElement = '<div class="container vertical-padding">' +
+            const noSolsFoundElement = '<div class="container vertical-padding">' +
                 '<p>' + message1 + '</p>' +
                 '<p>' + message2 + '</p>' +
                 '</div>';
 
             // Display message
             mainElement.innerHTML = noSolsFoundElement;
-        };
+        }
 
         return {
             displayAllSols,
@@ -253,43 +260,42 @@
 
     })();
 
-    var loader = (function () {
+    const loader = (function () {
 
         'use strict';
 
-        var loader = document.querySelector('[data-loader]');
-        var spinner = document.querySelector('[data-spinner]');
+        const loader = document.querySelector('[data-loader]');
+        const spinner = document.querySelector('[data-spinner]');
 
         // Show loader when loading data takes a bit too long
-        var loaderTimeout;
-        var timeoutMs = 500;
+        let loaderTimeout;
+        const timeoutMs = 500;
 
-        var hideLoader = function () {
+        function hideLoader() {
             loader.classList.add('hide');
             loader.style.display = 'none';
-        };
+        }
 
-        var showLoader = function () {
+        function showLoader() {
             loader.style.display = 'block';
-        };
+        }
 
-        var stopSpinner = function () {
-            spinner.style.WebkitAnimationPlayState = 'paused';
+        function stopSpinner() {
             spinner.style.animationPlayState = 'paused';
-        };
+        }
 
-        var start = function () {
+        function start() {
             // Start loader when loading data takes a bit too long
             loaderTimeout = setTimeout(function () {
                 showLoader();
             }, timeoutMs);
-        };
+        }
 
-        var stop = function () {
+        function stop() {
             clearTimeout(loaderTimeout);
             hideLoader();
             stopSpinner();
-        };
+        }
 
         return {
             start,
@@ -298,10 +304,10 @@
 
     })();
 
-    var displayAndStoreSols = function (data) {
+    function displayAndStoreSols(data) {
 
         // Set up the sol data 
-        var sols = nasaInsightWeather.extractAllSols(data);
+        const sols = nasaInsightWeather.extractAllSols(data);
 
         // Display sols in app
         appView.displayAllSols(sols);
@@ -312,10 +318,10 @@
             sols
         });
 
-    };
+    }
 
 
-    var getDataFromApi = function () {
+    function getDataFromApi() {
 
         return new Promise(function (resolve, reject) {
 
@@ -333,9 +339,9 @@
                     reject(error);
                 });
         })
-    };
+    }
 
-    var initializeSols = function () {
+    function initializeSols() {
 
         return new Promise(function (resolve, reject) {
 
@@ -354,7 +360,7 @@
                 reject(error);
             }
         });
-    };
+    }
 
     /* Initialize */
     (function () {
@@ -365,8 +371,6 @@
         initializeSols()
             .catch(function (error) {
                 // Neither stored sols nor api went through
-                console.error(error);
-
                 // Display message that no sols were found
                 appView.displayNoSolsFound();
 

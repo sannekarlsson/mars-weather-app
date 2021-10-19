@@ -115,20 +115,6 @@
         </div>
     </footer>
 
-    <!-- JS template for previous sols -->
-    <script id="js-sol-template" type="text/template">
-        <tr>
-            <td class="table-cell">Sol <span data-sol-day>{{data-sol-day}}</span></td>
-            <td class="table-cell" data-sol-earth-date>{{data-sol-earth-date}}</td>
-            <td class="table-cell">
-                <span data-sol-temp="avg">{{data-sol-temp="avg"}}</span>°</td>
-            <td class="table-cell">
-                <span data-sol-temp="high">{{data-sol-temp="high"}}</span>°</td>
-            <td class="table-cell">
-                <span data-sol-temp="low">{{data-sol-temp="low"}}</span>°</td>
-        </tr>
-    </script>
-
     <!-- Polyfill -->
     <script id="polyfill-check">
         if (!(window.Promise && window.fetch && Element.prototype.closest &&
